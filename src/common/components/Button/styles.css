@@ -10,6 +10,7 @@ Colors base
 */
 
 .btn {
+  display: flex;
   height: 38px;
   border: 1px;
   border-radius: 3px;
