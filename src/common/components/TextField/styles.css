@@ -19,13 +19,21 @@ Colors base
   border-radius: 2px;
 }
 
-.text-field__box:hover, .text-field__box:focus-within {
+.text-field__box--disabled {
+  border: 1px solid #ecf0f1;
+  background-color:#ecf0f1;
+}
+.text-field__box--disabled:hover {
+  outline: 0;
+}
+
+.text-field__box:hover:enabled, .text-field__box:focus-within {
   outline: 0;
   border: 1px solid #3ec1d3;
 }
 .text-field__box:hover, .text-field__input:hover {
   cursor: pointer;
-}                                      
+}                                    
 
 .text-field__input {
   display: flex;

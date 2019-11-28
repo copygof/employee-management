@@ -15,6 +15,8 @@ function TextField({
   disabled,
   required,
   error,
+  type,
+  pattern,
 }) {
   return (
     <div className={classNames('text-field')}>
@@ -22,10 +24,14 @@ function TextField({
         <span>{label}</span>
         {required && <span className="text-field__label__required">*</span>}
       </label>
-      <div className={classNames('text-field__box')}>
+      <div className={classNames('text-field__box', {
+        'text-field__box--disabled': disabled
+      })}>
         <input
-          className={classNames('text-field__input')}
-          type="text"
+          className={classNames('text-field__input', {
+            'text-field__box--disabled': disabled
+          })}
+          type={type}
           id={id}
           name={name}
           placeholder={placeholder}
@@ -33,6 +39,7 @@ function TextField({
           disabled={disabled}
           required={required}
           {...value && { value }}
+          {...pattern && { pattern }}
         />
         {children}
       </div>
@@ -46,19 +53,23 @@ TextField.propTypes = {
   value: PropTypes.string,
   id: PropTypes.string,
   name: PropTypes.string,
+  type: PropTypes.string,
   placeholder: PropTypes.string,
+  pattern: PropTypes.string,
   error: PropTypes.string,
   disabled: PropTypes.bool,
   required: PropTypes.bool,
   onChange: PropTypes.func,
 }
 TextField.defaultProps = {
+  type: 'text',
   label: '',
   value: '',
   id: '',
   name: '',
   placeholder: '',
   error: '',
+  pattern: '',
   required: false,
   disabled: false,
   onChange() {},
