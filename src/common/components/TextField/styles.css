@@ -9,8 +9,11 @@ Colors base
 
 */
 
+.text-field,
 .text-field__box {
   display: flex;
+  flex: 1;
+  flex-direction: column;
 }
 .text-field__box {
   display: flex;

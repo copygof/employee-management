@@ -17,9 +17,11 @@ function TextField({
   error,
   type,
   pattern,
+  maxLength,
+  width,
 }) {
   return (
-    <div className={classNames('text-field')}>
+    <div className={classNames('text-field')} style={{ ...width && { width, flex: 0 } }}>
       <label className="text-field__label" htmlFor={id}>
         <span>{label}</span>
         {required && <span className="text-field__label__required">*</span>}
@@ -38,8 +40,9 @@ function TextField({
           onChange={onChange}
           disabled={disabled}
           required={required}
-          {...value && { value }}
+          value={value}
           {...pattern && { pattern }}
+          {...maxLength && { maxLength }}
         />
         {children}
       </div>
@@ -57,6 +60,8 @@ TextField.propTypes = {
   placeholder: PropTypes.string,
   pattern: PropTypes.string,
   error: PropTypes.string,
+  maxLength: PropTypes.number,
+  width: PropTypes.number,
   disabled: PropTypes.bool,
   required: PropTypes.bool,
   onChange: PropTypes.func,

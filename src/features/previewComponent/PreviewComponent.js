@@ -3,10 +3,14 @@ import Button from 'common/components/Button'
 import TextField from 'common/components/TextField';
 import DateField from 'common/components/DateField/DateField';
 import Dropdown from 'common/components/Dropdown';
+import CitizenID from 'common/components/CitizenID';
 
 function PreviewComponent() {
   return (
     <div>
+      <div style={{ margin: 12 }}>
+        <CitizenID label="CitizenID" />
+      </div>
       <div style={{ margin: 12 }}>
         <Button text="Button primary" />
         <Button text="Button secondary" variant="secondary" />
