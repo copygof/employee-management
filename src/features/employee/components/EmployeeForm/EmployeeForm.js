@@ -4,6 +4,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import * as yup from 'yup'
 import _ from 'lodash'
+import { useDispatch, useSelector } from 'react-redux'
 import classNames from 'classnames'
 import { Formik, useFormik } from 'formik'
 import { getCountryCallingCode } from 'libphonenumber-js'
@@ -13,6 +14,7 @@ import Button from 'common/components/Button'
 import Dropdown from 'common/components/Dropdown'
 import DateField from 'common/components/DateField/DateField'
 import CitizenID from 'common/components/CitizenID'
+import { createNewEmployee, updateNewEmployee, selectors } from '../../redux'
 
 let employeeSchema = yup.object().shape({
   title: yup.object().shape({
@@ -37,42 +39,51 @@ let employeeSchema = yup.object().shape({
   expectedSalary: yup.string().required(),
 })
 
-console.log(countryList.getCodeList())
+const INITIAL_VALUE = {
+  title: {
+    key: 'mr',
+    value: 'Mr'
+  },
+  firstName: '',
+  lastName: '',
+  birthday: '',
+  nationality: {
+    key: 'th',
+    value: ''
+  },
+  citizenId: '',
+  gender: '',
+  mobilePhone: {
+    prefix: 'th',
+    number: '',
+  },
+  passwordNo: '',
+  expectedSalary: '',
+}
 
 function EmployeeForm({
   id
 }) {
-  const handleOnSubmit = () => {}
+  const dispatch = useDispatch()
+  const employeeDetail = useSelector(selectors.getEmployeeById(id))
+
+  const handleOnSubmit = (values) => {
+    if (id) {
+      dispatch(updateNewEmployee(id, values))
+    } else {
+      dispatch(createNewEmployee(values))
+    }
+  }
+
+  const initialValues = id ? employeeDetail : INITIAL_VALUE
+
   const formbag = useFormik({
-    initialValues: {
-      title: {
-        key: 'mr',
-        value: 'Mr'
-      },
-      firstName: '',
-      lastName: '',
-      birthday: '',
-      nationality: {
-        key: 'th',
-        value: ''
-      },
-      citizenId: '',
-      gender: '',
-      mobilePhone: {
-        prefix: 'th',
-        number: '',
-      },
-      passwordNo: '',
-      expectedSalary: '',
-    },
+    initialValues,
     enableReinitialize: true,
     isInitialValid: false,
     validationSchema: employeeSchema,
     onSubmit: handleOnSubmit,
   })
-
-  console.log('errors', formbag.errors)
-  console.log('value', formbag.values)
 
   return (
     <div className="employee-form">
@@ -132,7 +143,10 @@ function EmployeeForm({
           label="Nationality:"
           placeholder="-- Please select --"
           onSelected={(selected) => {
-            formbag.setFieldValue('nationality', selected)
+            formbag.setFieldValue('nationality', {
+              key: selected.key,
+              value: selected.value
+            })
             setTimeout(formbag.handleBlur('nationality'), 100)
           }}
           selected={{
@@ -244,16 +258,17 @@ function EmployeeForm({
           required
           id="expectedSalary"
           label="Expected Salary:"
-          onChange={formbag.handleChange('expectedSalary')}
+          onChange={e => formbag.handleChange('expectedSalary')(e.target.value.replace(/\D/g, ''))}
           onBlur={formbag.handleBlur('expectedSalary')}
           value={formbag.values.expectedSalary}
           error={formbag.touched.expectedSalary ? formbag.errors.expectedSalary : ''}
         />
+        <span style={{ alignSelf: 'center', marginTop: 26, marginLeft: 8, marginRight: 8, }}>THB</span>
       </div>
 
       <div className="section-field">
         <div style={{ display: 'flex', justifyContent: 'flex-end', flex: 1 }}>
-         <Button text="Submit" onClick={formbag.handleSubmit} />
+         <Button text="Submit" onClick={formbag.handleSubmit} disabled={!formbag.isValid} />
         </div>
       </div>
     </div>
@@ -264,6 +279,7 @@ EmployeeForm.propTypes = {
   id: PropTypes.string,
 }
 EmployeeForm.defaultProps = {
+  // id: 'b5d4d468-a328-4dfa-9fa6-75a3d419ffc8',
   id: ''
 }
 
