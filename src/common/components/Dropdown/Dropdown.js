@@ -8,16 +8,15 @@ function Dropdown({
   name,
   label,
   required,
-  value,
+  selected,
   placeholder,
-  onChange,
+  onSelected,
   data,
   error,
   disabled,
 }) {
-  // TODO Callack props
-  const [selected, setSelected] = useState({})
   const [dropdownVisible, setDropdownVisible] = useState(false)
+  const selectedData = data.find(v => v.key === selected.key)
 
   return (
     <div className="dropdown">
@@ -29,8 +28,8 @@ function Dropdown({
         <div className="dropdown__box">
           {!selected.key ? <p className="dropdown__text">{placeholder}</p>
           : <p className={classNames("dropdown__item")}>
-            {selected.icon && <span className="dropdown__icon">{selected.icon}</span>}
-            {selected.value}
+            {selectedData.icon && <span className="dropdown__icon">{selectedData.icon}</span>}
+            {selectedData.value}
           </p>}
         </div>
         {dropdownVisible && (
@@ -44,7 +43,7 @@ function Dropdown({
                   })}
                   key={item.key}
                   onClick={() => {
-                    setSelected(item)
+                    onSelected(item)
                     setTimeout(() => {
                       setDropdownVisible(false)
                     }, 100)
@@ -66,7 +65,7 @@ function Dropdown({
 Dropdown.propTypes = {
   id: PropTypes.string,
   name: PropTypes.string,
-  value: PropTypes.string,
+  selected: PropTypes.string,
   placeholder: PropTypes.string,
   error: PropTypes.string,
   onChange: PropTypes.func,
@@ -80,12 +79,12 @@ Dropdown.propTypes = {
 Dropdown.defaultProps = {
   id: '',
   name: '',
-  value: '',
-  placeholder: '-- selected -- ',
+  selected: '',
+  placeholder: '',
   error: '',
   disabled: false,
   data: [],
-  onChange() {}
+  onSelected() {}
 }
 
 

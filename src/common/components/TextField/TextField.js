@@ -19,6 +19,8 @@ function TextField({
   pattern,
   maxLength,
   width,
+  onFocus,
+  onBlur,
 }) {
   return (
     <div className={classNames('text-field')} style={{ ...width && { width, flex: 0 } }}>
@@ -38,6 +40,8 @@ function TextField({
           name={name}
           placeholder={placeholder}
           onChange={onChange}
+          onFocus={onFocus}
+          onBlur={onBlur}
           disabled={disabled}
           required={required}
           value={value}
@@ -65,6 +69,8 @@ TextField.propTypes = {
   disabled: PropTypes.bool,
   required: PropTypes.bool,
   onChange: PropTypes.func,
+  onFocus: PropTypes.func,
+  onBlur: PropTypes.func,
 }
 TextField.defaultProps = {
   type: 'text',
@@ -78,6 +84,8 @@ TextField.defaultProps = {
   required: false,
   disabled: false,
   onChange() {},
+  onFocus() {},
+  onBlur() {},
 }
 
 export default TextField;
