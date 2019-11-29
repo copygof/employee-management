@@ -9,7 +9,7 @@ function Button({
   onClick,
   disabled,
   text,
-  variant
+  variant,
 }) {
   return (
     <button

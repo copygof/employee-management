@@ -14,7 +14,7 @@ import Button from 'common/components/Button'
 import Dropdown from 'common/components/Dropdown'
 import DateField from 'common/components/DateField/DateField'
 import CitizenID from 'common/components/CitizenID'
-import { createNewEmployee, updateNewEmployee, selectors } from '../../redux'
+import { createNewEmployee, updateEmployee, selectors } from '../../redux'
 
 let employeeSchema = yup.object().shape({
   title: yup.object().shape({
@@ -35,7 +35,7 @@ let employeeSchema = yup.object().shape({
     number: yup.string(),
     icon: yup.string(),
   }).required(),
-  passwordNo: yup.string(),
+  passportNo: yup.string(),
   expectedSalary: yup.string().required(),
 })
 
@@ -49,30 +49,33 @@ const INITIAL_VALUE = {
   birthday: '',
   nationality: {
     key: 'th',
-    value: ''
+    value: 'Thai'
   },
   citizenId: '',
   gender: '',
   mobilePhone: {
-    prefix: 'th',
+    key: 'th',
+    prefix: '66',
     number: '',
   },
-  passwordNo: '',
+  passportNo: '',
   expectedSalary: '',
 }
 
 function EmployeeForm({
-  id
+  id,
+  onSuccess
 }) {
   const dispatch = useDispatch()
   const employeeDetail = useSelector(selectors.getEmployeeById(id))
 
   const handleOnSubmit = (values) => {
     if (id) {
-      dispatch(updateNewEmployee(id, values))
+      dispatch(updateEmployee(id, values))
     } else {
       dispatch(createNewEmployee(values))
     }
+    onSuccess()
   }
 
   const initialValues = id ? employeeDetail : INITIAL_VALUE
@@ -177,26 +180,26 @@ function EmployeeForm({
           <label htmlFor="gender" >Gender:</label>
           <div className="gender-radio">
             <input
-              checked={formbag.values.gender === 'male'}
+              checked={formbag.values.gender === 'Male'}
               onChange={formbag.handleChange('gender')}
               className="radio"
               type="radio"
               name="gender"
-              value="male" />  Male<br></br>
+              value="Male" />  Male<br></br>
             <input
-              checked={formbag.values.gender === 'female'}
+              checked={formbag.values.gender === 'Female'}
               onChange={formbag.handleChange('gender')}
               className="radio"
               type="radio"
               name="gender"
-              value="female" />  Female<br></br>
+              value="Female" />  Female<br></br>
             <input
-              checked={formbag.values.gender === 'unisex'}
+              checked={formbag.values.gender === 'Unisex'}
               onChange={formbag.handleChange('gender')}
               className="radio"
               type="radio"
               name="gender"
-              value="unisex" />  Unisex<br></br>
+              value="Unisex" />  Unisex<br></br>
           </div>
         </div>
       </div>
@@ -208,11 +211,12 @@ function EmployeeForm({
           label="Mobile phone"
           placeholder="-- Please select --"
           onSelected={(selected) => {
-            formbag.setFieldValue('mobilePhone.prefix', selected.key)
+            formbag.setFieldValue('mobilePhone.key', selected.key)
+            formbag.setFieldValue('mobilePhone.prefix', selected.value)
             setTimeout(formbag.handleBlur('mobilePhone.prefix'), 100)
           }}
           selected={{
-            key: formbag.values.mobilePhone.prefix,
+            key: formbag.values.mobilePhone.key,
           }}
           error={formbag.touched.mobilePhone ? _.get(formbag, 'errors.mobilePhone.prefix') : ''}
           data={Object.entries(countryList.getCodeList()).map(([code, name]) => {
@@ -244,12 +248,12 @@ function EmployeeForm({
 
       <div className="section-field">
         <TextField
-          id="passwordNo"
-          label="Password No:"
-          onChange={formbag.handleChange('passwordNo')}
-          onBlur={formbag.handleBlur('passwordNo')}
-          value={formbag.values.passwordNo}
-          error={formbag.touched.passwordNo ? formbag.errors.passwordNo : ''}
+          id="passportNo"
+          label="Passport No:"
+          onChange={formbag.handleChange('passportNo')}
+          onBlur={formbag.handleBlur('passportNo')}
+          value={formbag.values.passportNo}
+          error={formbag.touched.passportNo ? formbag.errors.passportNo : ''}
         />
       </div>
       
@@ -277,10 +281,12 @@ function EmployeeForm({
 
 EmployeeForm.propTypes = {
   id: PropTypes.string,
+  onSuccess: PropTypes.func,
 }
 EmployeeForm.defaultProps = {
   // id: 'b5d4d468-a328-4dfa-9fa6-75a3d419ffc8',
-  id: ''
+  id: '',
+  onSuccess() {}
 }
 
 export default EmployeeForm;

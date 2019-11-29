@@ -4,7 +4,7 @@ import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import createStore from './store'
 import PreviewComponent from 'features/previewComponent/PreviewComponent'
-import EmployeeForm from 'features/employee/components/EmployeeForm'
+import EmployeePage from 'features/employee/components/EmployeePage'
 
 const { store, persistor } = createStore()
 
@@ -14,7 +14,7 @@ export default function App() {
       <PersistGate loading={null} persistor={persistor}>
       {/* <PersistGate loading={null}> */}
         <div>
-          <EmployeeForm />
+          <EmployeePage />
         </div>
       </PersistGate>
     </Provider>
