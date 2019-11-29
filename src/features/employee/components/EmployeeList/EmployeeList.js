@@ -9,6 +9,7 @@ import {
   deleteEmployees,
   toggleSelectedEmployee,
   toggleSelectedEmployees,
+  setPagination,
   selectors
 } from '../../redux'
 import EmployeeForm from '../EmployeeForm'
@@ -16,7 +17,10 @@ import EmployeeForm from '../EmployeeForm'
 function EmployeeList() {
   const dispatch = useDispatch()
   const employeeList = useSelector(selectors.getEmployeeList)
+  const employeeLisByPage = useSelector(selectors.getEmployeeListByPage)
   const selectedIds = useSelector(selectors.getSelectedIds)
+  const countPage = useSelector(selectors.getCountPage)
+  const currentPage = useSelector(selectors.getCurrentPage)
 
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [selectedId, setSelectedId] = useState('')
@@ -27,10 +31,12 @@ function EmployeeList() {
     }
   }, [modalIsOpen, selectedId])
 
+  const pageList = new Array(4).fill(currentPage).map((v, i) => v + i)
+
   return (
     <div>
       <div className="employee-list__header">
-        <div className="checkbox">
+        <div style={{ display: 'flex' }}>
           <label class="checkbox">
             <input type="checkbox" checked={employeeList.length && employeeList.length === selectedIds.length} onClick={() => dispatch(toggleSelectedEmployees())}  />
             <span>Select All</span>
@@ -39,6 +45,13 @@ function EmployeeList() {
           <Button text="DELETE" variant="secondary" disabled={!selectedIds.length} onClick={() => dispatch(deleteEmployees())} />
           <span className="spacer" />
           <Button text="Add new employee" variant="secondary" onClick={() => setModalIsOpen(true)} />
+          <div style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>
+            <p style={{ margin: 8, color: '#333333' }} onClick={() => dispatch(setPagination(currentPage > 1 ? currentPage - 1 : 1 ))}>PREV</p>
+            {pageList.map(page => (
+              <p style={{ margin: 8, color: currentPage === page ? '#ff4232' : '#333333' }} key={page} onClick={() => {}}>{page}</p>
+            ))}
+            <p style={{ margin: 8, color: '#333333' }} onClick={() => dispatch(setPagination(currentPage + 1))}>NEXT</p>
+          </div>
         </div>
       </div>
       <table>
@@ -54,7 +67,7 @@ function EmployeeList() {
           </tr>
         </thead>
         <tbody>
-          {employeeList.map(employee => (
+          {employeeLisByPage.map(employee => (
             <tr key={employee.id}>
               <td>
                 <div className="checkbox">

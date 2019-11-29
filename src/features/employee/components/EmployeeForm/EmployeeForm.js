@@ -284,7 +284,6 @@ EmployeeForm.propTypes = {
   onSuccess: PropTypes.func,
 }
 EmployeeForm.defaultProps = {
-  // id: 'b5d4d468-a328-4dfa-9fa6-75a3d419ffc8',
   id: '',
   onSuccess() {}
 }

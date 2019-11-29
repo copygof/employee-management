@@ -4,7 +4,8 @@ const INITIAL_STATE = {
   byId: {},
   selectedIds: [],
   pagination: {
-    currentPage: 1
+    currentPage: 1,
+    perPage: 10
   }
 }
 
@@ -100,6 +101,7 @@ const reducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         pagination: {
+          ...state.pagination,
           currentPage: action.payload.page
         }
       }
@@ -113,6 +115,25 @@ export const selectors = {
   getEmployeeById: id => state => state.employee.byId[id],
   getEmployeeList: state => Object.values(state.employee.byId),
   getSelectedIds: state => state.employee.selectedIds,
+  getCurrentPage: state => state.employee.pagination.currentPage,
+  getCountPage: state => {
+    const { pagination: { currentPage, perPage }, byId } = state.employee
+    const list = Object.values(byId)
+    const countPage = list.length / perPage
+    let realPage = countPage
+    
+    const [prefix, postFix] = `${countPage}`.split('.')
+    
+    if (postFix) {
+      realPage = parseInt(prefix) + 1
+    }
+    
+    return realPage
+  },
+  getEmployeeListByPage: state => {
+    const { pagination: { currentPage, perPage }, byId } = state.employee
+    const list = Object.values(byId).slice(perPage*(currentPage-1), perPage*currentPage)
+    return list
+  },
 }
-
 export default reducer
